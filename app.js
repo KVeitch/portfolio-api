@@ -1,10 +1,10 @@
 const express = require("express");
-const sendGrid = require("@sendGrid/mail");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 
 require('dotenv').config()
-
+const apiKey = process.env.SENDGRID_API_KEY
+const sendGrid = require("@sendGrid/mail");
 const app = express();
 app.set('port', process.env.PORT || 3030)
 app.use(cors());
@@ -29,14 +29,13 @@ app.get("/api/v1/email", (req, res, next) => {
 });
 
 app.post("/api/v1/email", (req, res, next) => {
-  sendGrid.setApiKey(process.env.SENDGRID_API_KEY);
+  sendGrid.setApiKey(apiKey);
   const msg = {
-    to: "kirk.a.veich+portSite@gmail.com",
-    from: req.body.email,
+    to: "kirk.a.veitch@gmail.com",
+    from: 'kirk.a.veitch@gmail.com',
     subject: "Website Contact",
-    text: req.body.message,
+    text: `Name:${req.body.name} Msg:${req.body.message} From:${req.body.email}`,
   };
-
   sendGrid
     .send(msg)
     .then((result) => {
@@ -45,7 +44,7 @@ app.post("/api/v1/email", (req, res, next) => {
       });
     })
     .catch((err) => {
-      console.log("error: ", err);
+      console.log("error: ", err.response.body);
       res.status(401).json({
         success: false,
       });
