@@ -21,17 +21,15 @@ app.use((req, res, next) => {
 });
 
 app.get("/api/v1", (req, res, next) => {
-  res.send(`API Status: Up and running`);
+  res.send(`API Status: Up and running. <a href='https://www.google.com'>Visit my homepage</a>`);
 });
 
 app.get("/api/v1/email", (req, res, next) => {
-  res.send(`API Status: Up and running. POST only here`);
+  res.send(`API Status: Up and running. POST only here. <a href='https://www.google.com'>Visit my homepage</a>`);
 });
 
-app.post("/api/email", (req, res, next) => {
-  sendGrid.setApiKey(
-    process.env.APIKEY
-  );
+app.post("/api/v1/email", (req, res, next) => {
+  sendGrid.setApiKey(process.env.SENDGRID_API_KEY);
   const msg = {
     to: "kirk.a.veich+portSite@gmail.com",
     from: req.body.email,
